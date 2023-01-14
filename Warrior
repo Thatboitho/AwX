@@ -792,22 +792,22 @@ if not rightLeg then return print("right leg not found") end
 
 --rig joints
 
-local Neck = gp(humanoidRootPart, "Neck", "Motor6D")
+local Neck = gp(torso, "Neck", "Motor6D")
 if not Neck then return print("Neck not found") end
 
 local RootJoint = gp(humanoidRootPart, "RootJoint", "Motor6D")
 if not RootJoint then return print("root joint not found") end
 
-local LeftShoulder = gp(humanoidRootPart, "Left Shoulder", "Motor6D")
+local LeftShoulder = gp(torso, "Left Shoulder", "Motor6D")
 if not LeftShoulder then return print("left shoulder not found") end
 
-local RightShoulder = gp(humanoidRootPart, "Right Shoulder", "Motor6D")
+local RightShoulder = gp(torso, "Right Shoulder", "Motor6D")
 if not RightShoulder then return print("right shoulder not found") end
 
-local LeftHip = gp(humanoidRootPart, "Left Hip", "Motor6D")
+local LeftHip = gp(torso, "Left Hip", "Motor6D")
 if not LeftHip then return print("left hip not found") end
 
-local RightHip = gp(humanoidRootPart, "Right Hip", "Motor6D")
+local RightHip = gp(torso, "Right Hip", "Motor6D")
 if not RightHip then return print("right hip not found") end
 
 mpa:BreakJoints()
