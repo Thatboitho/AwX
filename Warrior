@@ -15,7 +15,7 @@ local simradius = "shp" --simulation radius (net bypass) method
 --"ssr" - setsimulationradius
 --false - disable
 local simrad = 1000 --simulation radius value
-local healthHide = true --moves your head away every 3 seconds so players dont see your health bar (alignmode 4 only)
+local healthHide = false --moves your head away every 3 seconds so players dont see your health bar (alignmode 4 only)
 local reclaim = true --if you lost control over a part this will move your primary part to the part so you get it back (alignmode 4)
 local novoid = true --prevents parts from going under workspace.FallenPartsDestroyHeight if you control them (alignmode 4 only)
 local physp = nil --PhysicalProperties.new(0.01, 0, 1, 0, 0) --sets .CustomPhysicalProperties to this for each part
@@ -847,13 +847,6 @@ end)
 local event = event.Event
 
 
-
-
-walkSpeed = 20
-
-game:GetService("Players").LocalPlayer.Character.Humanoid.WalkSpeed = walkSpeed
-
-
 local function stopIfRemoved(instance)
     if not (instance and instance.Parent) then
         c = nil
@@ -878,8 +871,6 @@ if not c then
 end
 
 local modes = {
-    c = "c",
-    f = "f",
     e = "e"
 }
 for i, v in pairs(modes) do
@@ -887,7 +878,7 @@ for i, v in pairs(modes) do
         modes[Enum.KeyCode[i:upper()]] = v
     end
 end
-local uis, mode = game:GetService("UserInputService"), ""
+local uis, mode, mode = game:GetService("UserInputService"), "", false
 uis.InputBegan:Connect(function(key)
     if uis:GetFocusedTextBox() then return end
     key = key.KeyCode
@@ -909,47 +900,47 @@ local attackCounter = 0
 
 
 local function s1n()
-mpamotor.C0 = mpamotor.C0:Lerp(cf(-0.1, -0.8, -2.7) * euler(2.5, 1.5707963267948966, -0.17453292519943295), 0.2) 
+mpamotor.C0 = mpamotor.C0:Lerp(cf(0.2, -0.5, -1.7) * angles(2.5, 1.5707963267948966, -0.17453292519943295), 0.2) 
 RightShoulder.C0 = RightShoulder.C0:Lerp(cf(1.5, 0, -0.5) * angles(1.5707963267948966, 3.141592653589793, 0), 0.2)  RootJoint.C0 = RootJoint.C0:Lerp(cf(0, 0, 0) * angles(-1.5707963267948966, 0, 4.4651914291880923), 0.2)  Neck.C0 = Neck.C0:Lerp(cf(0, 1, 0) * angles(-1.5707963267948966, 0, 1.941592653589793), 0.2)  RightHip.C0 = RightHip.C0:Lerp(cf(1, -1, 0) * angles(0, 1.5707963267948966, 0), 0.2)  LeftShoulder.C0 = LeftShoulder.C0:Lerp(cf(-1, 0.5, 0) * angles(0, -1.2217304763960306, -1.5707963267948966), 0.2)  LeftHip.C0 = LeftHip.C0:Lerp(cf(-1, -1, 0) * angles(0, -1.5707963267948966, 0), 0.2)  --RightArm,1.5,0,0,1,90,0,0,1,0,0,0,1,180,0,0,1,-0.5,0,0,1,0,0,0,1,Torso,0,0,0,1,-90,0,0,1,0,0,0,1,-0,0,0,1,0,0,0,1,210,0,0,1,Head,0,0,0,1,-90,0,0,1,1,0,0,1,-0,0,0,1,0,0,0,1,180,0,0,1,RightLeg,1,0,0,1,0,0,0,1,-1,0,0,1,90,0,0,1,0,0,0,1,0,0,0,1,LeftArm,-1,0,0,1,0,0,0,1,0.5,0,0,1,-70,0,0,1,0,0,0,1,-90,0,0,1,LeftLeg,-1,0,0,1,-0,0,0,1,-1,0,0,1,-90,0,0,1,0,0,0,1,0,0,0,1
 end
 
 local function s2n()
-mpamotor.C0 = mpamotor.C0:Lerp(cf(-0.1, -0.8, -2.7) * euler(2.5, 1.5707963267948966, -0.17453292519943295), 0.2) 
+mpamotor.C0 = mpamotor.C0:Lerp(cf(0.2, -0.5, -1.7) * angles(2.5, 1.5707963267948966, -0.17453292519943295), 0.2) 
 RightShoulder.C0 = RightShoulder.C0:Lerp(cf(1.5, 0, -0.5) * angles(1.5707963267948966, 3.141592653589793, -0.6981317007977318), 0.2)  RootJoint.C0 = RootJoint.C0:Lerp(cf(0, 0, 0) * angles(-1.5707963267948966, 0, 1.2179938779914944), 0.2)  Neck.C0 = Neck.C0:Lerp(cf(0, 1, 0) * angles(-1.5707963267948966, 0, 4.2651914291880923), 0.2)  RightHip.C0 = RightHip.C0:Lerp(cf(1, -1, 0) * angles(0, 1.5707963267948966, 0), 0.2)  LeftShoulder.C0 = LeftShoulder.C0:Lerp(cf(-1, 0.5, 0) * angles(0, -1.2217304763960306, -1.5707963267948966), 0.2)  LeftHip.C0 = LeftHip.C0:Lerp(cf(-1, -1, 0) * angles(0, -1.5707963267948966, 0), 0.2)  --RightArm,1.5,0,0,1,90,0,0,1,0,0,0,1,180,0,0,1,-0.5,0,0,1,-40,0,0,1,Torso,0,0,0,1,-90,0,0,1,0,0,0,1,-0,0,0,1,0,0,0,1,150,0,0,1,Head,0,0,0,1,-90,0,0,1,1,0,0,1,-0,0,0,1,0,0,0,1,210,0,0,1,RightLeg,1,0,0,1,0,0,0,1,-1,0,0,1,90,0,0,1,0,0,0,1,0,0,0,1,LeftArm,-1,0,0,1,0,0,0,1,0.5,0,0,1,-70,0,0,1,0,0,0,1,-90,0,0,1,LeftLeg,-1,0,0,1,-0,0,0,1,-1,0,0,1,-90,0,0,1,0,0,0,1,0,0,0,1
 end
 
 local function k()
-mpamotor.C0 = mpamotor.C0:Lerp(cf(-0.1, -0.8, -2.7) * euler(2.5, 1.5707963267948966, -0.17453292519943295), 0.2) 
+mpamotor.C0 = mpamotor.C0:Lerp(cf(0.2, -0.5, -1.7) * angles(2.5, 1.5707963267948966, -0.17453292519943295), 0.2) 
 RightShoulder.C0 = RightShoulder.C0:Lerp(cf(1, 0.5, 0) * angles(1.5707963267948966, 1.7453292519943295, -1.0471975511965976), 0.2)  LeftShoulder.C0 = LeftShoulder.C0:Lerp(cf(-1, 0.5, 0) * angles(1.5707963267948966, -1.9198621771937625, 2.0943951023931953), 0.2)  Neck.C0 = Neck.C0:Lerp(cf(0, 1, 0) * angles(-1.8325957145940461, 0, 3.141592653589793), 0.2)  RootJoint.C0 = RootJoint.C0:Lerp(cf(0, 0, -1) * angles(-1.2217304763960306, 0, 3.141592653589793), 0.2)  RightHip.C0 = RightHip.C0:Lerp(cf(1, -1, 0) * angles(0, 1.5707963267948966, -0.6981317007977318), 0.2)  LeftHip.C0 = LeftHip.C0:Lerp(cf(-1, -0.5, -0.8) * angles(0, -1.5707963267948966, -1.2217304763960306), 0.2)  --RightArm,1,0,0,1,90,0,0,1,0.5,0,0,1,100,0,0,1,0,0,0,1,-60,0,0,1,LeftArm,-1,0,0,1,90,0,0,1,0.5,0,0,1,-110,0,0,1,0,0,0,1,120,0,0,1,Head,0,0,0,1,-105,0,0,1,1,0,0,1,-0,0,0,1,0,0,0,1,180,0,0,1,Torso,0,0,0,1,-70,0,0,1,0,0,0,1,-0,0,0,1,-1,0,0,1,180,0,0,1,RightLeg,1,0,0,1,0,0,0,1,-1,0,0,1,90,0,0,1,0,0,0,1,-40,0,0,1,LeftLeg,-1,0,0,1,-0,0,0,1,-0.5,0,0,1,-90,0,0,1,-0.8,0,0,1,-70,0,0,1
 end
 
 local function k1()
-mpamotor.C0 = mpamotor.C0:Lerp(cf(-0.1, -0.8, -2.7) * euler(2.5, 1.5707963267948966, -0.17453292519943295), 0.2) 
+mpamotor.C0 = mpamotor.C0:Lerp(cf(0.2, -0.5, -1.7) * angles(2.5, 1.5707963267948966, -0.17453292519943295), 0.2) 
 RightShoulder.C0 = RightShoulder.C0:Lerp(cf(1, 0.5, 0) * angles(1.5707963267948966, 2.0943951023931953, -1.9198621771937625), 0.2)  LeftShoulder.C0 = LeftShoulder.C0:Lerp(cf(-1, 0.5, 0) * angles(1.5707963267948966, -2.0943951023931953, 1.9198621771937625), 0.2)  Neck.C0 = Neck.C0:Lerp(cf(0, 1, 0) * angles(-1.8325957145940461, 0, 3.141592653589793), 0.2)  RootJoint.C0 = RootJoint.C0:Lerp(cf(0, 0, 0) * angles(-1.3962634015954636, 0, 3.141592653589793), 0.2)  RightHip.C0 = RightHip.C0:Lerp(cf(1, -1, 0) * angles(0, 1.5707963267948966, -0.3490658503988659), 0.2)  LeftHip.C0 = LeftHip.C0:Lerp(cf(-1, -0.5, -0.8) * angles(0, -1.5707963267948966, -0.3490658503988659), 0.2)  --RightArm,1,0,0,1,90,0,0,1,0.5,0,0,1,120,0,0,1,0,0,0,1,-110,0,0,1,LeftArm,-1,0,0,1,90,0,0,1,0.5,0,0,1,-120,0,0,1,0,0,0,1,110,0,0,1,Head,0,0,0,1,-105,0,0,1,1,0,0,1,-0,0,0,1,0,0,0,1,180,0,0,1,Torso,0,0,0,1,-80,0,0,1,0,0,0,1,-0,0,0,1,0,0,0,1,180,0,0,1,RightLeg,1,0,0,1,0,0,0,1,-1,0,0,1,90,0,0,1,0,0,0,1,-20,0,0,1,LeftLeg,-1,0,0,1,-0,0,0,1,-0.5,0,0,1,-90,0,0,1,-0.8,0,0,1,-20,0,0,1
 end
 
 local function s1()
-mpamotor.C0 = mpamotor.C0:Lerp(cf(-0.1, -0.8, -2.7) * euler(2.5, 1.5707963267948966, -0.17453292519943295), 0.2) 
+mpamotor.C0 = mpamotor.C0:Lerp(cf(0.2, -0.5, -1.7) * angles(2.5, 1.5707963267948966, -0.17453292519943295), 0.2) 
 RootJoint.C0 = RootJoint.C0:Lerp(cf(0, 0, 0) * angles(-1.8325957145940461, 0, 2.179938779914944), 0.2)  LeftHip.C0 = LeftHip.C0:Lerp(cf(-1, -1, 0) * angles(0, -1.0471975511965976, 0), 0.2)  RightHip.C0 = RightHip.C0:Lerp(cf(1, -1, 0) * angles(0, 1.0471975511965976, 0), 0.2)  LeftShoulder.C0 = LeftShoulder.C0:Lerp(cf(-1, 0.5, 0) * angles(0, -1.2217304763960306, -1.5707963267948966), 0.2)  RightShoulder.C0 = RightShoulder.C0:Lerp(cf(1, 0.5, 0) * angles(1.5707963267948966, 0.6981317007977318, 0.6981317007977318), 0.2)  Neck.C0 = Neck.C0:Lerp(cf(0, 1, 0) * angles(-1.5707963267948966, 0, 3.6651914291880923), 0.2)  --Torso,0,0,0,1,-105,0,0,1,0,0,0,1,-0,0,0,1,0,0,0,1,150,0,0,1,LeftLeg,-1,0,0,1,-0,0,0,1,-1,0,0,1,-60,0,0,1,0,0,0,1,0,0,0,1,RightLeg,1,0,0,1,0,0,0,1,-1,0,0,1,60,0,0,1,0,0,0,1,0,0,0,1,LeftArm,-1,0,0,1,-0,0,0,1,0.5,0,0,1,-70,0,0,1,0,0,0,1,-90,0,0,1,RightArm,1,0,0,1,90,0,0,1,0.5,0,0,1,40,0,0,1,0,0,0,1,40,0,0,1,Head,0,0,0,1,-90,0,0,1,1,0,0,1,-0,0,0,1,0,0,0,1,210,0,0,1
 end
 
 local function s2()
-mpamotor.C0 = mpamotor.C0:Lerp(cf(-0.1, -0.8, -2.7) * euler(2.5, 1.5707963267948966, -0.17453292519943295), 0.2) 
+mpamotor.C0 = mpamotor.C0:Lerp(cf(0.2, -0.5, -1.7) * angles(2.5, 1.5707963267948966, -0.17453292519943295), 0.2) 
 RootJoint.C0 = RootJoint.C0:Lerp(cf(0, 0, 0) * angles(-1.8325957145940461, 0, 4.614257279586958), 0.2)  LeftHip.C0 = LeftHip.C0:Lerp(cf(-1, -1, 0) * angles(0, -1.0471975511965976, 0), 0.2)  RightHip.C0 = RightHip.C0:Lerp(cf(1, -1, 0) * angles(0, 1.0471975511965976, 0), 0.2)  LeftShoulder.C0 = LeftShoulder.C0:Lerp(cf(-1, 0.5, 0) * angles(0, -1.2217304763960306, -1.5707963267948966), 0.2)  RightShoulder.C0 = RightShoulder.C0:Lerp(cf(1.4, 1, -1) * angles(1.5707963267948966, 0.3490658503988659, -0.3490658503988659), 0.2)  Neck.C0 = Neck.C0:Lerp(cf(0, 1, 0) * angles(-1.5707963267948966, 0, 2.6179938779914944), 0.2)  --Torso,0,0,0,1,-105,0,0,1,0,0,0,1,-0,0,0,1,0,0,0,1,230,0,0,1,LeftLeg,-1,0,0,1,-0,0,0,1,-1,0,0,1,-60,0,0,1,0,0,0,1,0,0,0,1,RightLeg,1,0,0,1,0,0,0,1,-1,0,0,1,60,0,0,1,0,0,0,1,0,0,0,1,LeftArm,-1,0,0,1,-0,0,0,1,0.5,0,0,1,-70,0,0,1,0,0,0,1,-90,0,0,1,RightArm,1.4,0,0,1,90,0,0,1,1,0,0,1,20,0,0,1,-1,0,0,1,-20,0,0,1,Head,0,0,0,1,-90,0,0,1,1,0,0,1,-0,0,0,1,0,0,0,1,150,0,0,1
 end
 
 local function s3()
-mpamotor.C0 = mpamotor.C0:Lerp(cf(-0.1, -0.8, -2.7) * euler(2.5, 1.5707963267948966, -0.17453292519943295), 0.2) 
+mpamotor.C0 = mpamotor.C0:Lerp(cf(0.2, -0.5, -1.7) * angles(2.5, 1.5707963267948966, -0.17453292519943295), 0.2) 
 RootJoint.C0 = RootJoint.C0:Lerp(cf(0, 0, 0) * angles(-1.8325957145940461, 0, 4.614257279586958), 0.2)  LeftHip.C0 = LeftHip.C0:Lerp(cf(-1, -1, 0) * angles(0, -1.0471975511965976, 0), 0.2)  RightHip.C0 = RightHip.C0:Lerp(cf(1, -1, 0) * angles(0, 1.0471975511965976, 0), 0.2)  LeftShoulder.C0 = LeftShoulder.C0:Lerp(cf(-1, 0.5, 0) * angles(0, -1.2217304763960306, -1.5707963267948966), 0.2)  RightShoulder.C0 = RightShoulder.C0:Lerp(cf(1.4, 0, 0) * angles(1.5707963267948966, 2.792526803190927, -0.3490658503988659), 0.2)  Neck.C0 = Neck.C0:Lerp(cf(0, 1, 0) * angles(-1.5707963267948966, 0, 2.6179938779914944), 0.2)  --Torso,0,0,0,1,-105,0,0,1,0,0,0,1,-0,0,0,1,0,0,0,1,230,0,0,1,LeftLeg,-1,0,0,1,-0,0,0,1,-1,0,0,1,-60,0,0,1,0,0,0,1,0,0,0,1,RightLeg,1,0,0,1,0,0,0,1,-1,0,0,1,60,0,0,1,0,0,0,1,0,0,0,1,LeftArm,-1,0,0,1,-0,0,0,1,0.5,0,0,1,-70,0,0,1,0,0,0,1,-90,0,0,1,RightArm,1.4,0,0,1,90,0,0,1,0,0,0,1,160,0,0,1,0,0,0,1,-20,0,0,1,Head,0,0,0,1,-90,0,0,1,1,0,0,1,-0,0,0,1,0,0,0,1,150,0,0,1
 end
 
 local function s4()
-mpamotor.C0 = mpamotor.C0:Lerp(cf(-0.1, -0.8, -2.7) * euler(2.5, 1.5707963267948966, -0.17453292519943295), 0.2) 
+mpamotor.C0 = mpamotor.C0:Lerp(cf(0.2, -0.5, -1.7) * angles(2.5, 1.5707963267948966, -0.17453292519943295), 0.2) 
 RootJoint.C0 = RootJoint.C0:Lerp(cf(0, 0, 0) * angles(-1.8325957145940461, 0, 2.292526803190927), 0.2)  LeftHip.C0 = LeftHip.C0:Lerp(cf(-1, -1, 0) * angles(0, -1.0471975511965976, 0), 0.2)  RightHip.C0 = RightHip.C0:Lerp(cf(1, -1, 0) * angles(0, 1.0471975511965976, 0), 0.2)  LeftShoulder.C0 = LeftShoulder.C0:Lerp(cf(-1, 0.5, 0) * angles(0, -1.2217304763960306, -1.5707963267948966), 0.2)  RightShoulder.C0 = RightShoulder.C0:Lerp(cf(1.4, 0, 0) * angles(1.5707963267948966, 2.792526803190927, -0.6981317007977318), 0.2)  Neck.C0 = Neck.C0:Lerp(cf(0, 1, 0) * angles(-1.5707963267948966, 0, 3.490658503988659), 0.2)  --Torso,0,0,0,1,-105,0,0,1,0,0,0,1,-0,0,0,1,0,0,0,1,160,0,0,1,LeftLeg,-1,0,0,1,-0,0,0,1,-1,0,0,1,-60,0,0,1,0,0,0,1,0,0,0,1,RightLeg,1,0,0,1,0,0,0,1,-1,0,0,1,60,0,0,1,0,0,0,1,0,0,0,1,LeftArm,-1,0,0,1,-0,0,0,1,0.5,0,0,1,-70,0,0,1,0,0,0,1,-90,0,0,1,RightArm,1.4,0,0,1,90,0,0,1,0,0,0,1,160,0,0,1,0,0,0,1,-40,0,0,1,Head,0,0,0,1,-90,0,0,1,1,0,0,1,-0,0,0,1,0,0,0,1,200,0,0,1
 end
 
 local function idleanim()
-mpamotor.C0 = mpamotor.C0:Lerp(cf(-0.1, -0.8, -2.7) * euler(2.5, 1.5707963267948966, -0.17453292519943295), 0.2) 
+mpamotor.C0 = mpamotor.C0:Lerp(cf(0.2, -0.5, -1.7) * angles(2.5, 1.5707963267948966, -0.17453292519943295), 0.2) 
 RootJoint.C0 = RootJoint.C0:Lerp(cf(0, 0, 0) * angles(-1.5707963267948966, 0, 3.141592653589793), 0.2)  
 LeftShoulder.C0 = LeftShoulder.C0:Lerp(cf(-1, 0.5, 0) * angles(0, -1.5707963267948966, 0), 0.2)  
 RightHip.C0 = RightHip.C0:Lerp(cf(1, -1, 0) * angles(0, 1.5707963267948966, 0), 0.2)  
@@ -960,9 +951,11 @@ end
 
 
 
+
+
+
 con = mouse.Button1Down:Connect(function()
-    if not c then
-        con:Disconnect()
+    if mode ~= "e" then
         return
     end
 
@@ -1091,35 +1084,59 @@ for i=1, 10 do
     end
 end)
 
-
 while event:Wait() do
-    sine = sine + sinechange
-    local vel = humanoidRootPart.Velocity
+    sine += 0.2
+    local torvel = (game.Players.LocalPlayer.Character.Humanoid.MoveDirection * Vector3.new(1, 0, 1)).magnitude
+if mode ~= "e" then
+    if torvel > .5 then
+if mode == "e" then
+return
+end
+Anim = "WalkingNS"
+elseif torvel < .5 then
+Anim = "IdleNS"
+end
+end
+
+        
     if not attack then
- if vel.Magnitude > 2 then -- walk
-            LeftHip.C0 = LeftHip.C0:Lerp(cf(-1, -1, 0) * angles(0, -1.5707963267948966, -0.6981317007977318 * sin(sine * 0.2)), 0.2)  LeftShoulder.C0 = LeftShoulder.C0:Lerp(cf(-1, 0.5, 0) * angles(0, -1.5707963267948966 + 0.08726646259971647 * sin(sine * 0.2), -0.17453292519943295 + 0.3490658503988659 * sin(sine * 0.2)), 0.2)  RootJoint.C0 = RootJoint.C0:Lerp(cf(0, 0.1 * sin((sine + 0.1) * 0.4), 0) * angles(-1.6580627893946132 + 0.03490658503988659 * sin((sine + 0.1) * 0.2), 0, 3.141592653589793), 0.2)  RightHip.C0 = RightHip.C0:Lerp(cf(1, -1, 0) * angles(0, 1.5707963267948966, -0.6981317007977318 * sin(sine * 0.2)), 0.2)  RightShoulder.C0 = RightShoulder.C0:Lerp(cf(1, 0.5, 0) * angles(0, 1.5707963267948966 + 0.08726646259971647 * sin(sine * 0.2), 0.17453292519943295 + 0.3490658503988659 * sin(sine * 0.2)), 0.2)  Neck.C0 = Neck.C0:Lerp(cf(0, 1, 0) * angles(-1.5707963267948966 + 0.06981317007977318 * sin(sine * 0.4), 0, 3.141592653589793), 0.2)  --LeftLeg,-1,0,0,2,-0,0,0,2,-1,0,0,2,-90,0,0,2,0,0,0,2,0,-40,0,2,LeftArm,-1,0,0,2,-0,0,0,2,0.5,0,0,2,-90,5,0,2,0,0,0,2,-10,20,0,2,Torso,0,0,0,2,-95,2,0.1,4,0,0.1,0.1,4,-0,0,0,2,0,0,0,2,180,0,0,2,RightLeg,1,0,0,2,0,0,0,2,-1,0,0,2,90,0,0,2,0,0,0,2,0,-40,0,2,RightArm,1,0,0,2,0,0,0,2,0.5,0,0,2,90,5,0,2,0,0,0,2,10,20,0,2,Head,0,0,0,2,-90,4,0,4,1,0,0,2,-0,0,0,2,0,0,0,2,180,0,0,2
-            mpamotor.C0 = mpamotor.C0:Lerp(cf(-0.1, -0.8, -2.7) * euler(2.5, 1.5707963267948966, -0.17453292519943295), 0.2) 
+        if Anim == "WalkingNS" then
+            -- Execute WlkingNS animation
+RootJoint.C0 = RootJoint.C0:Lerp(cf(0, 0, 0) * angles(-1.5707963267948966, 0, 3.141592653589793), 0.2)  
+LeftShoulder.C0 = LeftShoulder.C0:Lerp(cf(-1, 0.5, 0) * angles(1.5707963267948966, -1.5707963267948966 - 0.08726646259971647 * sin((sine + 0.8) * 0.5), 1.5707963267948966 - 0.6981317007977318 * sin((sine - 4) * 0.25)), 0.2) 
+ RightHip.C0 = RightHip.C0:Lerp(cf(1, -1, -0.1 - 0.4 * sin(sine * 0.25)) * angles(0, 1.5707963267948966, -0.2617993877991494 - 0.5235987755982988 * sin((sine + 4) * 0.25)), 0.2)
+  LeftHip.C0 = LeftHip.C0:Lerp(cf(-1, -1, -0.1 + 0.4 * sin(sine * 0.25)) * angles(0, -1.5707963267948966, 0.2617993877991494 - 0.5235987755982988 * sin((sine + 4) * 0.25)), 0.2) 
+ Neck.C0 = Neck.C0:Lerp(cf(0, 1, 0) * angles(-1.5707963267948966, 0, 3.141592653589793), 0.2)
+  RightShoulder.C0 = RightShoulder.C0:Lerp(cf(1, 0.5, 0) * angles(1.5707963267948966, 1.5707963267948966 + 0.08726646259971647 * sin((sine - 0.8) * 0.5), -1.5707963267948966 - 0.6981317007977318 * sin((sine - 4) * 0.25)), 0.2)  --Torso,0,0,0,0.25,-90,0,0,0.25,0,0,0,0.25,-0,0,0,0.25,0,0,0,0.25,180,0,0,0.25,LeftArm,-1,0,0,0.25,90,0,0,0.25,0.5,0,0,0.25,-90,-5,0.8,0.5,0,0,0,0.25,90,-40,-4,0.25,RightLeg,1,0,0,0.25,0,0,0,0.25,-1,0,0,0.25,90,0,0,0.25,-0.1,-0.4,0,0.25,-15,-30,4,0.25,LeftLeg,-1,0,0,0.25,-0,0,0,0.25,-1,0,0,0.25,-90,0,0,0.25,-0.1,0.4,0,0.25,15,-30,4,0.25,Head,0,0,0,0.25,-90,0,0,0.25,1,0,0,0.25,-0,0,0,0.25,0,0,0,0.25,180,0,0,0.25,RightArm,1,0,0,0.25,90,0,0,0.25,0.5,0,0,0.25,90,5,-0.8,0.5,0,0,0,0.25,-90,-40,-4,0.25
+         mpamotor.C0 = mpamotor.C0:Lerp(cf(0.2, -30, -1.7) * angles(2.5, 1.5707963267948966, -0.17453292519943295), 0.2) 
 
-   else
+        elseif Anim == "IdleNS" then
+            -- Execute IdleNS animation
 LeftShoulder.C0 = LeftShoulder.C0:Lerp(cf(-1, 0.5, 0) * angles(1.5707963267948966, -1.5707963267948966 + 0.08726646259971647 * sin((sine + 0.5) * 0.1), 1.5707963267948966), 0.2)  RightHip.C0 = RightHip.C0:Lerp(cf(1, -1 + 0.1 * sin(sine * 0.2), 0) * angles(-0.17453292519943295, 1.2217304763960306, 0), 0.2)  LeftHip.C0 = LeftHip.C0:Lerp(cf(-1, -1 + 0.1 * sin(sine * 0.2), 0) * angles(0, -1.2217304763960306, 0), 0.2)  Neck.C0 = Neck.C0:Lerp(cf(0, 1, 0) * angles(-1.5707963267948966, 0, 3.490658503988659 + 0.2617993877991494 * sin(sine * 0.05)), 0.2)  RightShoulder.C0 = RightShoulder.C0:Lerp(cf(1, 0.5, 0) * angles(1.5707963267948966, 1.7453292519943295 + 0.08726646259971647 * sin((sine + 0.3) * 0.1), -1.5707963267948966), 0.2)  RootJoint.C0 = RootJoint.C0:Lerp(cf(0, 0.05 - 0.1 * sin(sine * 0.2), 0) * angles(-1.5707963267948966, 0, 2.792526803190927), 0.2)  --LeftArm,-1,0,0,1,90,0,0,1,0.5,0,0,1,-90,5,0.5,1,0,0,0,1,90,0,0,1,RightLeg,1,0,0,1,-10,0,0,1,-1,0,0,1,70,0,0,1,0,0,0,1,0,0,0,1,LeftLeg,-1,0,0,1,-0,0,0,1,-1,0,0,1,-70,0,0,1,0,0,0,1,0,0,0,1,Head,0,0,0,1,-90,0,0,1,1,0,0,1,-0,0,0,1,0,0,0,1,200,15,0,0.50,RightArm,1,0,0,1,90,0,0,1,0.5,0,0,1,100,5,0.3,1,0,0,0,1,-90,0,0,1,Torso,0,0,0,1,-90,0,0,1,0.05,0.1,0,1,-0,0,0,1,0,0,0,1,160,0,0,1
-mpamotor.C0 = mpamotor.C0:Lerp(cf(-0.1, -0.8, -2.7) * euler(2.5, 1.5707963267948966, -0.17453292519943295), 0.2) 
-   if mode == "c" then
-mpamotor.C0 = mpamotor.C0:Lerp(cf(-0.1, -0.8, -2.7) * euler(2.5, 1.5707963267948966, -0.17453292519943295), 0.2) 
-            RightShoulder.C0 = RightShoulder.C0:Lerp(cf(1, 0.5, 0) * angles(0, 1.3962634015954636, 0.08726646259971647 * sin(sine * 0.125)), 0.2)  
-LeftShoulder.C0 = LeftShoulder.C0:Lerp(cf(-1, 0.5, 0.5) * angles(1.0471975511965976 + 0.08726646259971647 * sin((sine + 1.2) * 0.125), -1.2217304763960306 + 0.08726646259971647 * sin(sine * 0.125), 1.5707963267948966), 0.2)  
-RightHip.C0 = RightHip.C0:Lerp(cf(1, 0, -1) * angles(0, 1.5707963267948966, -0.3490658503988659), 0.2)  
-LeftHip.C0 = LeftHip.C0:Lerp(cf(-1, -1.5, -1) * angles(0, -1.5707963267948966, 1.5707963267948966), 0.2)  
-Neck.C0 = Neck.C0:Lerp(cf(0, 1, 0) * angles(-1.5707963267948966, 0, 3.141592653589793 + 0.3490658503988659 * sin(sine * 0.1)), 0.2)  
-RootJoint.C0 = RootJoint.C0:Lerp(cf(0, -1, 0) * angles(-1.5707963267948966, 0, 3.141592653589793), 0.2)  --RightArm,1,0,0,0.25,0,0,0,0.25,0.5,0,0,0.25,80,0,0,0.25,0,0,0,0.25,0,5,0,0.125,LeftArm,-1,0,0,0.25,60,5,1.2,0.125,0.5,0,0,0.25,-70,5,0,0.125,0.5,0,0,0.25,90,0,0,0.25,RightLeg,1,0,0,0.25,0,0,0,0.25,0,0,0,0.25,90,0,0,0.25,-1,0,0,0.25,-20,0,0,0.25,LeftLeg,-1,0,0,0.25,-0,0,0,0.25,-1.5,0,0,0.25,-90,0,0,0.25,-1,0,0,0.25,90,0,0,0.25,Head,0,0,0,0.25,-90,0,0,0.25,1,0,0,0.25,-0,0,0,0.25,0,0,0,0.25,180,20,0,0.1,Torso,0,0,0,0.25,-90,0,0,0.25,-1,0,0,0.25,-0,0,0,0.25,0,0,0,0.25,180,0,0,0.25
+mpamotor.C0 = mpamotor.C0:Lerp(cf(0.2, -30, -1.7) * angles(2.5, 1.5707963267948966, -0.17453292519943295), 0.2) 
 
-elseif mode == "f" then
-mpamotor.C0 = mpamotor.C0:Lerp(cf(-0.1, -0.8, -2.7) * euler(2.5, 1.5707963267948966, -0.17453292519943295), 0.2) 
-    LeftShoulder.C0 = LeftShoulder.C0:Lerp(cf(-0.7, 0.5, -0.5) * angles(0, -2.9670597283903604, -1.5707963267948966), 0.2)  Neck.C0 = Neck.C0:Lerp(cf(0, 1, 0) * angles(-1.5707963267948966, 0, 3.141592653589793), 0.2)  RightHip.C0 = RightHip.C0:Lerp(cf(1, 0, -0.7) * angles(0, 1.5707963267948966, 0.8726646259971648), 0.2)  RootJoint.C0 = RootJoint.C0:Lerp(cf(0, -1, 0) * angles(-2.2689280275926285, 0, 3.141592653589793), 0.2)  LeftHip.C0 = LeftHip.C0:Lerp(cf(-1, -0.8, -1.3) * angles(0, -1.5707963267948966, 0.6981317007977318), 0.2)  RightShoulder.C0 = RightShoulder.C0:Lerp(cf(0.7, 0.5, -0.5) * angles(0, 2.9670597283903604, 1.5707963267948966), 0.2)  --LeftArm,-0.7,0,0,1,-0,0,0,1,0.5,0,0,1,-170,0,0,1,-0.5,0,0,1,-90,0,0,1,Head,0,0,0,1,-90,0,0,1,1,0,0,1,-0,0,0,1,0,0,0,1,180,0,0,1,RightLeg,1,0,0,1,0,0,0,1,0,0,0,1,90,0,0,1,-0.7,0,0,1,50,0,0,1,Torso,0,0,0,1,-130,0,0,1,-1,0,0,1,-0,0,0,1,0,0,0,1,180,0,0,1,LeftLeg,-1,0,0,1,-0,0,0,1,-0.8,0,0,1,-90,0,0,1,-1.3,0,0,1,40,0,0,1,RightArm,0.7,0,0,1,0,0,0,1,0.5,0,0,1,170,0,0,1,-0.5,0,0,1,90,0,0,1
+if mode == "e" then
+            -- Execute IdleWS animation
+LeftShoulder.C0 = LeftShoulder.C0:Lerp(cf(-1, 0.5, 0) * angles(1.5707963267948966, -1.5707963267948966 + 0.08726646259971647 * sin((sine + 0.5) * 0.1), 1.5707963267948966), 0.2)  RightHip.C0 = RightHip.C0:Lerp(cf(1, -1 + 0.1 * sin(sine * 0.2), 0) * angles(-0.17453292519943295, 1.2217304763960306, 0), 0.2)  LeftHip.C0 = LeftHip.C0:Lerp(cf(-1, -1 + 0.1 * sin(sine * 0.2), 0) * angles(0, -1.2217304763960306, 0), 0.2)  Neck.C0 = Neck.C0:Lerp(cf(0, 1, 0) * angles(-1.5707963267948966, 0, 3.490658503988659 + 0.2617993877991494 * sin(sine * 0.05)), 0.2)  RightShoulder.C0 = RightShoulder.C0:Lerp(cf(1, 0.5, 0) * angles(1.5707963267948966, 1.7453292519943295 + 0.08726646259971647 * sin((sine + 0.3) * 0.1), -1.5707963267948966), 0.2)  RootJoint.C0 = RootJoint.C0:Lerp(cf(0, 0.05 - 0.1 * sin(sine * 0.2), 0) * angles(-1.5707963267948966, 0, 2.792526803190927), 0.2)  --LeftArm,-1,0,0,1,90,0,0,1,0.5,0,0,1,-90,5,0.5,1,0,0,0,1,90,0,0,1,RightLeg,1,0,0,1,-10,0,0,1,-1,0,0,1,70,0,0,1,0,0,0,1,0,0,0,1,LeftLeg,-1,0,0,1,-0,0,0,1,-1,0,0,1,-70,0,0,1,0,0,0,1,0,0,0,1,Head,0,0,0,1,-90,0,0,1,1,0,0,1,-0,0,0,1,0,0,0,1,200,15,0,0.50,RightArm,1,0,0,1,90,0,0,1,0.5,0,0,1,100,5,0.3,1,0,0,0,1,-90,0,0,1,Torso,0,0,0,1,-90,0,0,1,0.05,0.1,0,1,-0,0,0,1,0,0,0,1,160,0,0,1
+mpamotor.C0 = mpamotor.C0:Lerp(cf(0.2, 23, -1.7) * angles(2.5, 1.5707963267948966, -0.17453292519943295), 0.2) 
+if mode == "e" then
+if torvel > .5 then 
 
-elseif mode == "e" then
-RightShoulder.C0 = RightShoulder.C0:Lerp(cf(1, 0.5, 0) * angles(0, 1.5707963267948966, 2.2689280275926285), 0.2)  mpamotor.C0 = mpamotor.C0:Lerp(cf(-0.1, -0.8, -2.7) * euler(2.5, 1.5707963267948966, -0.17453292519943295), 0.2)  LeftShoulder.C0 = LeftShoulder.C0:Lerp(cf(-1, 0.5, 0) * angles(1.0471975511965976, -1.0471975511965976, 1.5707963267948966), 0.2)  RightHip.C0 = RightHip.C0:Lerp(cf(1, -1, 0) * angles(0, 1.2217304763960306, 0), 0.2)  Neck.C0 = Neck.C0:Lerp(cf(0, 1, 0) * angles(-1.5707963267948966, 0, 3.141592653589793), 0.2)  LeftHip.C0 = LeftHip.C0:Lerp(cf(-1, -1, 0) * angles(0, -1.2217304763960306, 0), 0.2)  RootJoint.C0 = RootJoint.C0:Lerp(cf(0, 0, 0) * angles(-1.5707963267948966, 0, 3.141592653589793), 0.2)  --RightArm,1,0,0,1,0,0,0,1,0.5,0,0,1,90,0,0,1,0,0,0,1,130,0,0,1,Back_AccAccessory_Handle,0.17378836870193481,0,0,1,0,0,0,1,-2,0,0,1,0,0,0,1,2,0,0,1,0,3600,0,0.09,LeftArm,-1,0,0,1,60,0,0,1,0.5,0,0,1,-60,0,0,1,0,0,0,1,90,0,0,1,RightLeg,1,0,0,1,0,0,0,1,-1,0,0,1,70,0,0,1,0,0,0,1,0,0,0,1,Head,0,0,0,1,-90,0,0,1,1,0,0,1,-0,0,0,1,0,0,0,1,180,0,0,1,LeftLeg,-1,0,0,1,-0,0,0,1,-1,0,0,1,-70,0,0,1,0,0,0,1,0,0,0,1,Torso,0,0,0,1,-90,0,0,1,0,0,0,1,-0,0,0,1,0,0,0,1,180,0,0,1
+            -- Execute WalkingWS animation
+RootJoint.C0 = RootJoint.C0:Lerp(cf(0, 0, 0) * angles(-1.5707963267948966, 0, 3.141592653589793), 0.2)  
+LeftShoulder.C0 = LeftShoulder.C0:Lerp(cf(-1, 0.5, 0) * angles(1.5707963267948966, -1.5707963267948966 - 0.08726646259971647 * sin((sine + 0.8) * 0.5), 1.5707963267948966 - 0.6981317007977318 * sin((sine - 4) * 0.25)), 0.2) 
+ RightHip.C0 = RightHip.C0:Lerp(cf(1, -1, -0.1 - 0.4 * sin(sine * 0.25)) * angles(0, 1.7, -0.2617993877991494 - 1 * sin((sine + 4) * 0.25)), 0.2)
+  LeftHip.C0 = LeftHip.C0:Lerp(cf(-1, -1, -0.1 + 0.4 * sin(sine * 0.25)) * angles(0, -1.5707963267948966, 0.2617993877991494 - 1 * sin((sine + 4) * 0.25)), 0.2) 
+ Neck.C0 = Neck.C0:Lerp(cf(0, 1, 0) * angles(-1.5707963267948966, 0, 3.141592653589793), 0.2)
+  RightShoulder.C0 = RightShoulder.C0:Lerp(cf(1, 0.5, 0) * angles(1.5707963267948966, 1.5707963267948966 + 0.08726646259971647 * sin((sine - 0.8) * 0.5), -1.5707963267948966 - 0.6981317007977318 * sin((sine - 4) * 0.25)), 0.2)  --Torso,0,0,0,0.25,-90,0,0,0.25,0,0,0,0.25,-0,0,0,0.25,0,0,0,0.25,180,0,0,0.25,LeftArm,-1,0,0,0.25,90,0,0,0.25,0.5,0,0,0.25,-90,-5,0.8,0.5,0,0,0,0.25,90,-40,-4,0.25,RightLeg,1,0,0,0.25,0,0,0,0.25,-1,0,0,0.25,90,0,0,0.25,-0.1,-0.4,0,0.25,-15,-30,4,0.25,LeftLeg,-1,0,0,0.25,-0,0,0,0.25,-1,0,0,0.25,-90,0,0,0.25,-0.1,0.4,0,0.25,15,-30,4,0.25,Head,0,0,0,0.25,-90,0,0,0.25,1,0,0,0.25,-0,0,0,0.25,0,0,0,0.25,180,0,0,0.25,RightArm,1,0,0,0.25,90,0,0,0.25,0.5,0,0,0.25,90,5,-0.8,0.5,0,0,0,0.25,-90,-40,-4,0.25
+  mpamotor.C0 = mpamotor.C0:Lerp(cf(0.2, -0.5, -1.7) * angles(2.5, 1.5707963267948966, -0.17453292519943295), 0.2) 
 
-  end
-     end
+        end
+
+        
+end
+        end
     end
 end
+end
+
